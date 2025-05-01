@@ -63,6 +63,7 @@
         transform: scale(1.05);
         color: white;
     }
+    
 </style>
 <body>
     <header>
@@ -73,6 +74,7 @@
       <p id="author">- Author</p>
       <div class="buttons">
         <button id="new-quote">Next Quote</button>
+        <button id="copy">Copy</button>
       </div>
     </div>
   </body>
@@ -135,13 +137,47 @@ const quotes = [
 const quoteElem = document.getElementById("quote");
 const authorElem = document.getElementById("author");
 
+function typeText(element, text, callback) {
+  element.textContent = "";
+  let i = 0;
+  const speed = 50;
+  function type() {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    } else if (callback) {
+      callback();
+    }
+  }
+  type();
+}
+
 function showQuote() {
   const q = quotes[Math.floor(Math.random() * quotes.length)];
-  quoteElem.textContent = `"${q.text}"`;
-  authorElem.textContent = `- ${q.author}`;
+  typeText(quoteElem, `"${q.text}"`, () => {
+    typeText(authorElem, `- ${q.author}`);
+  });
+}
+
+function copyQuote() {
+  navigator.clipboard.writeText(`${quoteElem.textContent} ${authorElem.textContent}`);
+  (document.getElementById("copied-msg") || createCopyMsg()).style.display = "block";
+  setTimeout(() => document.getElementById("copied-msg").style.display = "none", 1500);
+}
+
+function createCopyMsg() {
+  const msg = document.createElement("div");
+  msg.id = "copied-msg";
+  msg.style.cssText = "color: green; margin-top: 10px;";
+  msg.textContent = "Copied!";
+  document.querySelector(".buttons").appendChild(msg);
+  return msg;
 }
 
 document.getElementById("new-quote").onclick = showQuote;
+document.getElementById("copy").onclick = copyQuote;
 window.onload = showQuote;
+
 </script>
 </html>
