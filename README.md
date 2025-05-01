@@ -1,2 +1,2 @@
 # QuotesGenerator
-A Quote Generator 
+A Quotes Generator and You can Copy it
