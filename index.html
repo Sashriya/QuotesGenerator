@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote generator</title>
+</head>
+<style>
+    *{
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 700;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        flex-direction: column;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 30px;
+        font-size: larger;
+        background: linear-gradient(to right, rgb(214, 214, 17), #adc43c);
+    }
+
+    header {
+        margin-bottom: -65px;
+    }
+
+    @media (max-width: 600px) {
+        body {
+            padding: 20px;
+            font-size: medium;
+        }
+        .quote-box{
+           padding: 70px;
+        }
+    }
+    .quote-box {
+        max-width: 800px;
+        margin: 100px auto;
+        padding: 25px;
+        text-align: center;
+        border-radius: 10px;
+        background: #f0f0f039;
+        box-shadow: 0 0 20px rgba(10, 10, 10, 0.377);
+    }
+    
+    button {
+        margin: 10px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: none;
+        background-color: rgb(143, 208, 230);
+        color: black;
+        transition: all  0.3s ease-in-out;
+    }
+
+    button:hover{
+        background-color: rgb(26, 26, 224);
+        transform: scale(1.05);
+        color: white;
+    }
+</style>
+<body>
+    <header>
+        <h2>Quotes Generator</h2>
+    </header>
+    <div class="quote-box">
+      <p id="quote">Loading...</p>
+      <p id="author">- Author</p>
+      <div class="buttons">
+        <button id="new-quote">Next Quote</button>
+      </div>
+    </div>
+  </body>
+  
+<script>
+const quotes = [
+  { text: "Be yourself; everyone else is already taken.", author: "Oscar Wilde" },
+  { text: "Two things are infinite: the universe and human stupidity.", author: "Albert Einstein" },
+  { text: "So many books, so little time.", author: "Frank Zappa" },
+  { text: "A room without books is like a body without a soul.", author: "Marcus Tullius Cicero" },
+  { text: "In three words I can sum up everything I've learned about life: it goes on.", author: "Robert Frost" },
+  { text: "If you tell the truth, you don't have to remember anything.", author: "Mark Twain" },
+  { text: "Always forgive your enemies; nothing annoys them so much.", author: "Oscar Wilde" },
+  { text: "To live is the rarest thing in the world. Most people exist, that is all.", author: "Oscar Wilde" },
+  { text: "Live as if you were to die tomorrow. Learn as if you were to live forever.", author: "Mahatma Gandhi" },
+  { text: "That which does not kill us makes us stronger.", author: "Friedrich Nietzsche" },
+  { text: "I have not failed. I've just found 10,000 ways that won't work.", author: "Thomas Edison" },
+  { text: "Life is what happens to us while we are making other plans.", author: "Allen Saunders" },
+  { text: "We accept the love we think we deserve.", author: "Stephen Chbosky" },
+  { text: "It is never too late to be what you might have been.", author: "George Eliot" },
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+  { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+  { text: "Not all those who wander are lost.", author: "J.R.R. Tolkien" },
+  { text: "Everything you can imagine is real.", author: "Pablo Picasso" },
+  { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+  { text: "You only live once, but if you do it right, once is enough.", author: "Mae West" },
+  { text: "Life isn't about finding yourself. It's about creating yourself.", author: "George Bernard Shaw" },
+  { text: "Turn your wounds into wisdom.", author: "Oprah Winfrey" },
+  { text: "Happiness is not something ready made. It comes from your own actions.", author: "Dalai Lama" },
+  { text: "What lies behind us and what lies before us are tiny matters compared to what lies within us.", author: "Ralph Waldo Emerson" },
+  { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman" },
+  { text: "The purpose of our lives is to be happy.", author: "Dalai Lama" },
+  { text: "Don't cry because it's over, smile because it happened.", author: "Dr. Seuss" },
+  { text: "Life is really simple, but we insist on making it complicated.", author: "Confucius" },
+  { text: "Good friends, good books, and a sleepy conscience: this is the ideal life.", author: "Mark Twain" },
+  { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" },
+  { text: "You miss 100% of the shots you don’t take.", author: "Wayne Gretzky" },
+  { text: "It does not do to dwell on dreams and forget to live.", author: "J.K. Rowling" },
+  { text: "You cannot swim for new horizons until you have courage to lose sight of the shore.", author: "William Faulkner" },
+  { text: "Change the world by being yourself.", author: "Amy Poehler" },
+  { text: "You don’t have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "The mind is everything. What you think you become.", author: "Buddha" },
+  { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+  { text: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+  { text: "I would rather die of passion than of boredom.", author: "Vincent van Gogh" },
+  { text: "Life is like riding a bicycle. To keep your balance, you must keep moving.", author: "Albert Einstein" },
+  { text: "Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", author: "Marilyn Monroe" },
+  { text: "Doubt kills more dreams than failure ever will.", author: "Suzy Kassem" },
+  { text: "Do not go where the path may lead, go instead where there is no path and leave a trail.", author: "Ralph Waldo Emerson" },
+  { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+  { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+  { text: "Whether you think you can or you think you can’t, you’re right.", author: "Henry Ford" },
+  { text: "Dream big and dare to fail.", author: "Norman Vaughan" },
+  { text: "Everything has beauty, but not everyone sees it.", author: "Confucius" },
+  { text: "Success usually comes to those who are too busy to be looking for it.", author: "Henry David Thoreau" },
+  { text: "Don’t wait. The time will never be just right.", author: "Napoleon Hill" },
+  { text: "The best way to predict your future is to create it.", author: "Abraham Lincoln" }
+];
+
+const quoteElem = document.getElementById("quote");
+const authorElem = document.getElementById("author");
+
+function showQuote() {
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  quoteElem.textContent = `"${q.text}"`;
+  authorElem.textContent = `- ${q.author}`;
+}
+
+document.getElementById("new-quote").onclick = showQuote;
+window.onload = showQuote;
+</script>
+</html>
